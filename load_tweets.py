@@ -113,7 +113,7 @@ def insert_tweet(connection,tweet):
         else:
             user_id_urls = get_id_urls(tweet['user']['url'], connection)
 
-        # create/update the user
+        #FIXME create/update the user
         sql = sqlalchemy.sql.text('''
             ''')
 
@@ -165,7 +165,7 @@ def insert_tweet(connection,tweet):
         except TypeError:
             place_name = None
 
-        # NOTE:
+        # FIXME NOTE:
         # The tweets table has the following foreign key:
         # > FOREIGN KEY (in_reply_to_user_id) REFERENCES users(id_users)
         #
@@ -175,7 +175,7 @@ def insert_tweet(connection,tweet):
             sql=sqlalchemy.sql.text('''
                 ''')
 
-        # insert the tweet
+        #FIXME insert the tweet
         sql=sqlalchemy.sql.text(f'''
             ''')
 
@@ -190,7 +190,7 @@ def insert_tweet(connection,tweet):
 
         for url in urls:
             id_urls = get_id_urls(url['expanded_url'], connection)
-
+            #FIXME
             sql=sqlalchemy.sql.text('''
                 ''')
 
@@ -210,11 +210,11 @@ def insert_tweet(connection,tweet):
             # when we only have a mention of a user, however, we do not have all the information to store in the row;
             # therefore, we must store the user info "unhydrated"
             # HINT:
-            # use the ON CONFLICT DO NOTHING syntax
+            #FIXME use the ON CONFLICT DO NOTHING syntax
             sql=sqlalchemy.sql.text('''
                 ''')
 
-            # insert into tweet_mentions
+            #FIXME insert into tweet_mentions
             sql=sqlalchemy.sql.text('''
                 ''')
 
@@ -232,6 +232,7 @@ def insert_tweet(connection,tweet):
         tags = [ '#'+hashtag['text'] for hashtag in hashtags ] + [ '$'+cashtag['text'] for cashtag in cashtags ]
 
         for tag in tags:
+            #FIXME
             sql=sqlalchemy.sql.text('''
                 ''')
 
@@ -246,7 +247,7 @@ def insert_tweet(connection,tweet):
                 media = tweet['extended_entities']['media']
             except KeyError:
                 media = []
-
+        #FIXME
         for medium in media:
             id_urls = get_id_urls(medium['media_url'], connection)
             sql=sqlalchemy.sql.text('''
