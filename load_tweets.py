@@ -84,10 +84,6 @@ def insert_tweet(connection,tweet):
 
     NOTE:
     This function cannot be tested with standard python testing tools because it interacts with the db.
-    
-    FIXME:
-    This function is only partially implemented.
-    You'll need to add appropriate SQL insert statements to get it to work.
     '''
 
     
@@ -189,12 +185,6 @@ def insert_tweet(connection,tweet):
         except TypeError:
             place_name = None
 
-        # NOTE:
-        # The tweets table has the following foreign key:
-        # > FOREIGN KEY (in_reply_to_user_id) REFERENCES users(id_users)
-        #
-        # This means that every "in_reply_to_user_id" field must reference a valid entry in the users table.
-        # If the id is not in the users table, then you'll need to add it in an "unhydrated" form.
         if tweet.get('in_reply_to_user_id',None) is not None:
             sql=sqlalchemy.sql.text('''
                 insert into users (id_users)
@@ -268,13 +258,7 @@ def insert_tweet(connection,tweet):
             mentions = tweet['entities']['user_mentions']
 
         for mention in mentions:
-            # insert into users table;
-            # note that we already have done an insert into the users table above for the user who sent a tweet;
-            # that insert had lots of information inside of it (i.e. the user row was "hydrated");
-            # when we only have a mention of a user, however, we do not have all the information to store in the row;
-            # therefore, we must store the user info "unhydrated"
-            # HINT:
-            # use the ON CONFLICT DO NOTHING syntax
+            #insert into the users table
             sql=sqlalchemy.sql.text('''
                 insert into users (id_users)
                 values (:id_users)
@@ -369,9 +353,6 @@ if __name__ == '__main__':
     print(type(connection))
 
     # loop through the input file
-    # NOTE:
-    # we reverse sort the filenames because this results in fewer updates to the users table,
-    # which prevents excessive dead tuples and autovacuums
     for filename in sorted(args.inputs, reverse=True):
         with zipfile.ZipFile(filename, 'r') as archive: 
             print(datetime.datetime.now(),filename)
