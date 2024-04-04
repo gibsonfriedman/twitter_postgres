@@ -89,21 +89,19 @@ def insert_tweet(connection,tweet):
     You'll need to add appropriate SQL insert statements to get it to work.
     '''
 
-    # skip tweet if it's already inserted
-    sql=sqlalchemy.sql.text('''
-    SELECT id_tweets 
-    FROM tweets
-    WHERE id_tweets = :id_tweets
-    ''')
-    res = connection.execute(sql,{
-        'id_tweets':tweet['id'],
-        })
-    if res.first() is not None:
-        return
+   with connection.begin() as trans:
+        # skip tweet if it's already inserted
+        sql=sqlalchemy.sql.text('''
+        SELECT id_tweets 
+        FROM tweets
+        WHERE id_tweets = :id_tweets
+        ''')
+        res = connection.execute(sql,{
+            'id_tweets':tweet['id'],
+            })
+        if res.first() is not None:
+            return
 
-    # insert tweet within a transaction;
-    # this ensures that a tweet does not get "partially" loaded
-    with connection.begin() as trans:
 
         ########################################
         # insert into the users table
@@ -115,8 +113,7 @@ def insert_tweet(connection,tweet):
 
         #create/update the user
         sql = sqlalchemy.sql.text('''
-                INSERT INTO users (id_users, created_at, updated_at, id_urls, friends_count, listed_count, favourites_count, statuses_count, protected, verified, screen_name, name, location, description, withheld_in_countries) VALUES (:id_users, :created_at, :updated_at, :id_urls, :friends_count, :listed_count, :favourites_count, :statuses_count, :protected, :verified, :screen_name, :name, :location, :description, :withheld_in_countries) ON CONFLICT DO NOTHING;''')
-
+            INSERT INTO users (id_users, created_at, updated_at, screen_name, name, location, id_urls, description, protected, verified, friends_count, listed_count, favourites_count, statuses_count, withheld_in_countries) VALUES (:id_users, :created_at, :updated_at, :screen_name, :name, :location, :id_urls, :description, :protected, :verified, :friends_count, :listed_count, :favourites_count, :statuses_count, :withheld_in_countries) ON CONFLICT (id_users) DO NOTHING''')
         connection.execute(sql, {
             'id_users': tweet['user']['id'],
             'created_at': tweet['user']['created_at'],
@@ -184,7 +181,7 @@ def insert_tweet(connection,tweet):
         except TypeError:
             place_name = None
 
-        # FIXME NOTE:
+        # NOTE:
         # The tweets table has the following foreign key:
         # > FOREIGN KEY (in_reply_to_user_id) REFERENCES users(id_users)
         #
