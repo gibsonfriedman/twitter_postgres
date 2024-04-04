@@ -121,8 +121,38 @@ def insert_tweet(connection,tweet):
 
         # create/update the user
         sql = sqlalchemy.sql.text('''
-            INSERT INTO users (id_users, created_at, updated_at, id_urls, friends_count, listed_count, favourites_count, statuses_count, protected, verified, screen_name, name, location, description, withheld_in_countries
-            ) VALUES (:id_users, :created_at, :updated_at, :id_urls, :friends_count, :listed_count, :favourites_count, :statuses_count, :protected, :verified, :screen_name, :name, :location, :description, :withheld_in_countries
+            INSERT INTO users (
+                id_users,
+                created_at,
+                updated_at,
+                id_urls,
+                friends_count,
+                listed_count,
+                favourites_count,
+                statuses_count,
+                protected,
+                verified,
+                screen_name,
+                name,
+                location,
+                description,
+                withheld_in_countries
+            ) VALUES (
+                :id_users,
+                :created_at,
+                :updated_at,
+                :id_urls,
+                :friends_count,
+                :listed_count,
+                :favourites_count,
+                :statuses_count,
+                :protected,
+                :verified,
+                :screen_name,
+                :name,
+                :location,
+                :description,
+                :withheld_in_countries
             ) ON CONFLICT DO NOTHING;
             ''')
 
@@ -211,8 +241,44 @@ def insert_tweet(connection,tweet):
 
         # insert the tweet
         sql=sqlalchemy.sql.text(f'''
-        INSERT INTO tweets (id_tweets, id_users, created_at, in_reply_to_status_id, in_reply_to_user_id, quoted_status_id, retweet_count, favorite_count, quote_count, withheld_copyright, withheld_in_countries, source, text, country_code, state_code, lang, place_name, geo
-        ) VALUES (:id_tweets, :id_users, :created_at, :in_reply_to_status_id, :in_reply_to_user_id, :quoted_status_id, :retweet_count, :favorite_count, :quote_count, :withheld_copyright, :withheld_in_countries, :source, :text, :country_code, :state_code, :lang, :place_name, :geo
+        INSERT INTO tweets (
+            id_tweets,
+            id_users,
+            created_at,
+            in_reply_to_status_id,
+            in_reply_to_user_id,
+            quoted_status_id,
+            retweet_count,
+            favorite_count,
+            quote_count,
+            withheld_copyright,
+            withheld_in_countries,
+            source,
+            text,
+            country_code,
+            state_code,
+            lang,
+            place_name,
+            geo
+        ) VALUES (
+            :id_tweets,
+            :id_users,
+            :created_at,
+            :in_reply_to_status_id,
+            :in_reply_to_user_id,
+            :quoted_status_id,
+            :retweet_count,
+            :favorite_count,
+            :quote_count,
+            :withheld_copyright,
+            :withheld_in_countries,
+            :source,
+            :text,
+            :country_code,
+            :state_code,
+            :lang,
+            :place_name,
+            :geo
         ) ON CONFLICT DO NOTHING;
 
             ''')
